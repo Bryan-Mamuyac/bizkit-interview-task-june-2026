@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "equipment_id": 1,
+    "equipment_name": "Canon DSLR Camera",
+    "customer": "Existing Customer",
+    "from_date": "2026-01-10",
+    "to_date": "2026-01-15",
+    "total": 9000.0,
+    "status": "confirmed"
+  },
+  {
+    "id": 2,
+    "equipment_id": 2,
+    "equipment_name": "Cordless Drill",
+    "customer": "Mia Reyes",
+    "from_date": "2026-01-12",
+    "to_date": "2026-01-14",
+    "total": 1440.0,
+    "status": "cancelled"
+  },
+  {
+    "id": 3,
+    "equipment_id": 4,
+    "equipment_name": "PA Speaker System",
+    "customer": "Leo Santos",
+    "from_date": "2026-01-20",
+    "to_date": "2026-01-26",
+    "total": 11340.0,
+    "status": "confirmed"
+  }
+]
