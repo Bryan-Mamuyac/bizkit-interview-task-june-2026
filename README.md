@@ -2,7 +2,7 @@
 
 ![Booking form](screenshot-booking.png)
 
-![Current bookings](screenshot-bookings-list.png)
+![Current bookings](screenshot-booking-list.png)
 
 # Take-Home Exercise — Equipment Rental
 
