@@ -36,7 +36,7 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.06);
       padding: 32px;
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
     }
     h1 { font-size: 1.5rem; font-weight: 700; margin: 0 0 24px; }
     label {
@@ -113,6 +113,42 @@
     }
     .ok { background: var(--ok-bg); color: var(--ok-text); }
     .err { background: var(--err-bg); color: var(--err-text); }
+    h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 32px 0 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .bookings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .booking-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    .booking-item .b-equipment { font-weight: 600; }
+    .booking-item .b-dates { color: var(--muted); }
+    .booking-item.cancelled { opacity: 0.55; text-decoration: line-through; }
+    .booking-status {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+    .booking-status.confirmed { background: var(--ok-bg); color: var(--ok-text); }
+    .booking-status.cancelled { background: #f3f4f6; color: var(--muted); }
+    .empty-state { color: var(--muted); font-size: 0.9rem; padding: 8px 0; }
   </style>
 </head>
 <body>
@@ -131,6 +167,8 @@
     </div>
     <button id="book">Create booking</button>
     <div id="message"></div>
+    <h2>Current Bookings</h2>
+    <div id="bookingsList" class="bookings-list"></div>
   </div>
   <script>
     let equipmentList = [];
@@ -149,6 +187,31 @@
     function selectedEquipment() {
       const id = Number(document.getElementById("equipment").value);
       return equipmentList.find(e => e.id === id);
+    }
+    function formatDateRange(fromStr, toStr) {
+      return `${fromStr} → ${toStr}`;
+    }
+    async function loadBookings() {
+      const res = await fetch("/api/bookings");
+      const bookings = await res.json();
+      const listEl = document.getElementById("bookingsList");
+      if (bookings.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">No bookings yet.</div>`;
+        return;
+      }
+      const sorted = [...bookings].sort((a, b) => b.id - a.id);
+      listEl.innerHTML = sorted.map(b => {
+        const cancelledClass = b.status === "cancelled" ? "cancelled" : "";
+        return `
+          <div class="booking-item ${cancelledClass}">
+            <div>
+              <div class="b-equipment">${b.equipment_name}</div>
+              <div class="b-dates">${formatDateRange(b.from_date, b.to_date)}${b.customer ? " · " + b.customer : ""}</div>
+            </div>
+            <span class="booking-status ${b.status}">${b.status}</span>
+          </div>
+        `;
+      }).join("");
     }
     function dayCount(from, to) {
       const ms = new Date(to) - new Date(from);
@@ -208,6 +271,7 @@
       if (res.ok) {
         messageEl.className = "message ok";
         messageEl.textContent = `Booked! Total ${formatPeso(data.total)}.`;
+        loadBookings();
       } else {
         messageEl.className = "message err";
         messageEl.textContent = data.error;
@@ -218,6 +282,7 @@
     document.getElementById("to").addEventListener("change", updateTotal);
     document.getElementById("book").addEventListener("click", createBooking);
     loadEquipment();
+    loadBookings();
   </script>
 </body>
 </html>
