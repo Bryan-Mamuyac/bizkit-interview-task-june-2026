@@ -1,3 +1,9 @@
+## Preview
+
+![Booking form](screenshot-booking.png)
+
+![Current bookings](screenshot-bookings-list.png)
+
 # Take-Home Exercise — Equipment Rental
 
 Thanks for taking the time to do this! You'll work with a **small app that already exists** — much like you would on the job. A few core functions are left unimplemented (they raise `NotImplementedError`) for you to fill in against the business rules described in `app.py`.
